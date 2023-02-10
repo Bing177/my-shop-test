@@ -1,5 +1,7 @@
 <template>
 	<view>
+		<!-- 自定义组件：搜索框 -->
+		<my-search @click="goSearch"></my-search>
 		<!-- 轮播图 -->
 		<swiper :autoplay="true" :indicator-dots="true" :circular="true" :interval="3300">
 			<swiper-item v-for="s of swiperList" :key="s.goods_id">
@@ -100,6 +102,11 @@
 				} catch (e) {
 					console.log(e.message);
 				}
+			},
+			goSearch() {
+				uni.navigateTo({
+					url: '/subpkg/search/search'
+				})
 			}
 		},
 		onLoad() {
