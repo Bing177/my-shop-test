@@ -37,7 +37,11 @@
 			"style": {}
 		}, {
 			"path": "goods_list/goods_list",
-			"style": {}
+			"style": {
+				"enablePullDownRefresh": true,
+				"onReachBottomDistance": 150,
+				"backgroundColor": "#efefef"
+			}
 		}, {
 			"path": "search/search",
 			"style": {}
