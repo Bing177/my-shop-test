@@ -107,7 +107,7 @@
 			tag(item) {
 				// console.log('tag');
 				uni.navigateTo({
-					url: '/subpkg/goods_list/goods_list?id=' + item.id + '&kw=' + item.key
+					url: '/subpkg/goods_list/goods_list?kw=' + item.key
 				})
 			},
 			clear() {
