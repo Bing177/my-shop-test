@@ -26,13 +26,14 @@
 		<rich-text :nodes="goods_info.goods_introduce || undefined"></rich-text>
 		<!-- 商品导航组件 -->
 		<view class="goods-nav">
-			<view v-for="(o,i) of options" :key="i" :class="o.class">
-				<uni-icons class="uni-icons" :type="o.icon" size="20" :data-info="o.info"></uni-icons>
+			<view v-for="(o,i) of options" :key="i" :class="o.class" @click="clickHandler(o)">
+				<uni-icons class="uni-icons" :type="o.icon" size="20" :data-info="o.info">
+				</uni-icons>
 				<text>{{o.text}}</text>
 			</view>
 			<!-- 按钮 -->
 			<view class="btn">
-				<button class="left" size="24" @click="toCart">加入购物车</button>
+				<button class="left" size="24" @click="cartHandler">加入购物车</button>
 				<button class="right" size="24" @click="toPurchase">立即购买</button>
 			</view>
 		</view>
@@ -40,6 +41,11 @@
 </template>
 
 <script>
+	import {
+		mapState,
+		mapGetters,
+		mapMutations,
+	} from 'vuex'
 	export default {
 		data() {
 			return {
@@ -50,7 +56,6 @@
 						class: 'service',
 						icon: 'headphones',
 						text: '客服',
-						// info: 0
 					},
 					{
 						class: 'store',
@@ -62,24 +67,27 @@
 						class: 'cart',
 						icon: 'cart',
 						text: '购物车',
-						info: 3
+						info: 0
 					}
 				],
-				// 右侧按钮
-				buttonGroup: [{
-						text: '加入购物车',
-						backgroundColor: '#ff0000',
-						color: '#fff'
-					},
-					{
-						text: '立即购买',
-						backgroundColor: '#ffa200',
-						color: '#fff'
-					}
-				]
 			};
 		},
+		computed: {
+			...mapState('cart', ['cart']),
+			...mapGetters('cart', ['total'])
+		},
+		watch: {
+			total: {
+				immediate: true,
+				handler(newV) {
+					const findResult = this.options.find(x => x.text === '购物车')
+					if (findResult)
+						findResult.info = newV
+				}
+			}
+		},
 		methods: {
+			...mapMutations('cart', ['addToCart']),
 			async getGoodsDetail(goodsid) {
 				const {
 					data: res
@@ -99,15 +107,35 @@
 					urls: this.goods_info.pics.map(x => x.pics_big)
 				})
 			},
-			toCart(e) {
-				uni.switchTab({
-					url: '/pages/cart/cart'
-				})
+			cartHandler() {
+				const goods = {
+					goods_id: this.goods_info.goods_id,
+					goods_name: this.goods_info.goods_name,
+					goods_price: this.goods_info.goods_price,
+					goods_count: 1,
+					goods_small_logo: this.goods_info.goods_small_logo,
+					goods_state: true
+				}
+				this.addToCart(goods)
+			},
+			clickHandler(options) {
+				if (options.text === '购物车') {
+					uni.switchTab({
+						url: '/pages/cart/cart'
+					})
+				}
+
+			},
+			toPurchase() {
+
 			}
 		},
 		onLoad(options) {
 			const goods_id = options.goods_id
 			this.getGoodsDetail(goods_id)
+		},
+		onShow() {
+
 		}
 	}
 </script>
@@ -195,6 +223,7 @@
 				position: relative;
 
 				.uni-icons {
+
 					&::after {
 						content: attr(data-info);
 						display: block;
@@ -209,6 +238,7 @@
 						border-radius: 50%;
 						background-color: #ff0000;
 						color: #fff;
+
 					}
 				}
 			}
