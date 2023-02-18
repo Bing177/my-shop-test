@@ -29,7 +29,9 @@ export function createApp() {
 
 //封装$http对象
 uni.$http = $http
-$http.baseUrl = 'https://www.uinav.com'
+// $http.baseUrl = 'https://www.uinav.com'
+$http.baseUrl = 'https://www.esinsis.tech'
+// $http.baseUrl = 'https://api-ugo-web.itheima.net'
 //请求拦截器
 $http.beforeRequest = function(options) {
 	uni.showLoading({

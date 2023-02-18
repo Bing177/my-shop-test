@@ -6,10 +6,22 @@ const mutations = {
 	},
 	saveAddressToStorage(state) {
 		uni.setStorageSync('address', JSON.stringify(state.address))
+	},
+	updateUserInfo(state, userinfo) {
+		state.userinfo = userinfo
+		this.commit('user/saveUserInfoToStorage')
+	},
+	saveUserInfoToStorage(state) {
+		uni.setStorageSync('userinfo', JSON.stringify(state.userinfo))
 	}
 }
 const state = {
-	address: JSON.parse(uni.getStorageSync('address') || '{}')
+	// 收货地址
+	address: JSON.parse(uni.getStorageSync('address') || '{}'),
+	// 登陆成功后后的token字段
+	token: '',
+	// 用户信息
+	userinfo: JSON.parse(uni.getStorageSync('userinfo') || '{}')
 }
 const getters = {
 	addstr(state) {
