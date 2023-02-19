@@ -29,13 +29,22 @@ export function createApp() {
 
 //封装$http对象
 uni.$http = $http
-$http.baseUrl = 'https://www.uinav.com'
+// $http.baseUrl = 'https://www.uinav.com'
+$http.baseUrl = 'https://www.esinsis.tech'
 //请求拦截器
 $http.beforeRequest = function(options) {
 	uni.showLoading({
 		title: 'loadding...'
 	})
+	// 请求是否为有权限的API接口
+	if (options.url.indexOf('/my/') !== -1) {
+		// 为请求头添加身份认证字段
+		options.header = {
+			Authorization: store.state.user.token
+		}
+	}
 }
+
 //响应拦截器
 $http.afterRequest = function() {
 	uni.hideLoading()
